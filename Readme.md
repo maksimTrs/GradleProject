@@ -11,3 +11,8 @@
 `./gradlew clean test -Ptest_figure_prop1="-5" -Psuite1`
 
 `./gradlew allureServe`
+
+`./gradlew`
+
+`./gradlew tasks`
+
