@@ -7,6 +7,7 @@ plugins {
     id "application"
     id("io.qameta.allure") version "2.11.2"
     id("io.freefair.lombok") version "6.6.1"
+    id 'jacoco'
 }
 
 group 'org.example'
@@ -26,6 +27,7 @@ dependencies {
 }
 
 test {
+    finalizedBy jacocoTestReport
     testLogging.showStandardStreams = true
     useJUnitPlatform() {
         if (project.hasProperty("suite1")) {
