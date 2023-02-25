@@ -1,10 +1,12 @@
-import java.time.Duration
-import java.time.Instant
+buildscript {
+    apply from: 'script.gradle'
+}
 
 plugins {
     id 'java'
     id "application"
     id("io.qameta.allure") version "2.11.2"
+    id("io.freefair.lombok") version "6.6.1"
 }
 
 group 'org.example'
@@ -17,6 +19,10 @@ repositories {
 dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
     testImplementation('io.qameta.allure:allure-junit5:2.20.1')
+    testImplementation("org.assertj:assertj-core:3.24.1")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.19.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.19.0")
+    implementation("org.slf4j:slf4j-log4j12:2.0.6")
 }
 
 test {
@@ -46,89 +52,3 @@ test {
 application {
     mainClassName = "org.example.Main"
 }
-
-
-//tasks.register('hello')
-task hello(description: "hello task", group: "TEST", type: DefaultTask) {
-    println "TEST TASK!"
-
-    doLast {
-        println "<<<Execution Phase -> Action 2>>>"
-    }
-    doFirst {
-        println "<<<Execution Phase -> Action 1>>>"
-    }
-    doLast {
-        println "<<<Execution Phase -> Action 3>>>"
-    }
-    doFirst {
-        println "<<<Execution Phase -> Action 0>>>"
-    }
-
-    println "Task description: <$description>; Task group: <$group>; Actions: <${actions.size()}>; Path task: <$path>"
-}
-
-
-task first(group: "QA") {
-    doLast {
-        println "Task <first> 1"
-    }
-}
-
-task second {
-    //dependsOn(first)
-    // shouldRunAfter(first)
-    first.shouldRunAfter(second)
-
-    doLast {
-        println "Task <second> 2"
-    }
-}
-
-
-task third() {
-    second.finalizedBy(third)
-
-    doLast {
-        println "Task <third> 3"
-    }
-}
-//second.finalizedBy third
-
-
-//task fourth(dependsOn: [first, second, third])
-task fourth(group: "QA") {
-    dependsOn(second, first)
-
-    doLast {
-        println "Task <fourth> 4"
-    }
-}
-
-
-//gradle.taskGraph.allTasks
-gradle.taskGraph.whenReady {
-    TaskExecutionGraph taskExecutionGraph ->
-        println("<--------- Graph: --------->")
-        taskExecutionGraph.allTasks.each {
-            println("${it.name}")
-        }
-        println("<--------- Graph: --------->")
-}
-
-
-gradle.taskGraph.beforeTask { Task task ->
-    if (task.group == "QA") {
-        task.ext.setProperty("startTime", Instant.now())
-    }
-}
-
-
-gradle.taskGraph.afterTask { Task task, TaskState state ->
-    if (task.group == "QA") {
-        println task.name + " took " + Duration.between(task.ext.startTime, Instant.now()).toNanos() + " Nanoseconds"
-    }
-}
-
-defaultTasks("hello", "first")
-
