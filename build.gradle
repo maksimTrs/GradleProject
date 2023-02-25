@@ -52,3 +52,18 @@ test {
 application {
     mainClassName = "org.example.Main"
 }
+
+// run ./gradlew assemble    and go to the build/libs folder
+/*jar {
+    //duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+   // from(configurations.runtimeClasspath.files)
+   // from(configurations.runtimeClasspath.files.collect {project.zipTree(it)})
+}*/
+
+task copyAllDependencies(type: Copy) {
+    jar.dependsOn(copyAllDependencies)
+    //dependsOn(jar)
+
+    from(configurations.runtimeClasspath.files)
+    into("$buildDir/libs/lib")
+}

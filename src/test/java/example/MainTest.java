@@ -41,8 +41,8 @@ public class MainTest {
             int a = Integer.parseInt(System.getProperty("test_figure_prop1"));
             int b = Math.abs(a);
             System.out.println("Value a = " + a);
-            System.out.println("Value b = " + b) ;
+            System.out.println("Value b = " + b);
             Assertions.assertEquals(Math.abs(a), b);
-        } else  throw new IllegalArgumentException("Need to add Sys prop <test_figure_prop1>");
+        } else throw new IllegalArgumentException("Need to add Sys prop <test_figure_prop1>");
     }
 }
